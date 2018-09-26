@@ -1,28 +1,45 @@
 const { candidates } = require('./data/candidates-data.js');
 
+const calculateScore = function(value1, value2) {
+  if (value1 === value2) {
+    return 2;
+  } else if (value1 + 1 === value2 || value1 - 1 === value2) {
+    return 1;
+  }
+
+  return 0;
+};
+
 const calculateBestMatch = function(quizSubmissions) {
+  let bestMatch = candidates[0];
+  let bestMatchScore = 0;
 
-  // TODO: replace this...
-  return candidates[0];
+  candidates.forEach(candidate => {
+    let candidateScore = 0;
 
-  // TODO: implement the following algorithm for
-  // calculating the candidate who is the best match for you
+    candidate.forEach((questionGroup, g) => {
+      questionGroup.forEach((question, q) => {
+        if (question.name.startsWith('question')) {
+          const submission = quizSubmissions[g][q];
+          const candidateValue = parseInt(question.value);
+          const submissionValue = parseInt(submission.value);
 
-  // set closest match to 1st candidate
+          candidateScore =
+            candidateScore + calculateScore(candidateValue, submissionValue);
+        }
+      });
+    });
 
-  // for each candidate
-  //  for each question
-  //    if question values are exactly the same
-  //      add 2 points
-  //    if question values are one score away
-  //      add 1 point
-  //  update the closest match
+    if (candidateScore >= bestMatchScore) {
+      bestMatch = candidate;
+      bestMatchScore = candidateScore;
+    }
+  });
 
-  // for ties, the last person who has the highest score is returned
-
-  // return closest match
+  return bestMatch;
 };
 
 module.exports = {
   calculateBestMatch,
+  calculateScore
 };
