@@ -1,9 +1,5 @@
 const { calculateBestMatch, points, selectNear } = require('./compatibility-calculator');
 const { candidates } = require('./data/candidates-data.js');
-// npm install -D jest
-// describe(name, fn) test function define
-// it or test (name, fn); expect(value) is specify target of the test
-// it ごとに前処理かけたいものがある場合beforeEachを使用する
 
 describe('selectNear', () => {
   it('should return true', () => {
@@ -35,7 +31,7 @@ describe('points', () => {
 });
 
 describe('compatibility-caculator', () => {
-  it('is equal', () => {
+  it('should be equal', () => {
     expect(calculateBestMatch(candidates[0])).toEqual(candidates[0]);
     expect(calculateBestMatch(candidates[1])).toEqual(candidates[1]);
     expect(calculateBestMatch(candidates[2])).toEqual(candidates[2]);
