@@ -1,34 +1,43 @@
-const { calculateBestMatch, points } = require('./compatibility-calculator');
+const { calculateBestMatch, points, selectNear } = require('./compatibility-calculator');
 const { candidates } = require('./data/candidates-data.js');
-// your test code here
+// npm install -D jest
+// describe(name, fn) test function define
+// it or test (name, fn); expect(value) is specify target of the test
+// it ごとに前処理かけたいものがある場合beforeEachを使用する
 
-function expects(expectation, actual, message = 'テスト') {
-  if (expectation !== actual){
-    throw `${message}:期待値と実際の値が一致しない。expectation: ${expectation}, actual: ${actual}`;
-  }
-  console.log(`${message}:成功した。`);
-}
+describe('selectNear', () => {
+  it('should return true', () => {
+    expect(selectNear(1, 2)).toBeTruthy();
+    expect(selectNear(2, 1)).toBeTruthy();
+  });
 
-function expectBestMatch(expectation, actual, message = 'テスト') {
-  const strExpectation = JSON.stringify(expectation);
-  const strActual = JSON.stringify(actual);
-  if (strExpectation !== strActual){
-    throw `${message}:期待値と実際の値が一致しない。expectation: ${strExpectation}, actual: ${strActual}`;
-  }
-  console.log(`${message}:成功した。`);
-}
+  it('should return false', () => {
+    expect(selectNear(2, 2)).toBeFalsy();
+    expect(selectNear(1, 4)).toBeFalsy();
+  });
+});
 
+describe('points', () => {
+  it('should return 2 if equal', () => {
+    expect(points(1, 1)).toBe(2);
+  });
 
-expects(points(1, 1), 2, 'return 2');
-expects(points(2, 1), 1, 'return 1');
-expects(points(1, 2), 1, 'return 1');
-expects(points(4, 0), 0, 'return 0');
-expects(points(1, 3), 0, 'return 0');
+  it('should return 1 if 1 point difference', () => {
+    expect(points(2, 1)).toBe(1);
+    expect(points(1, 2)).toBe(1);
+  });
 
+  it('should return 0 if 2 or more different', () => {
+    expect(points(1, 3)).toBe(0);
+    expect(points(3, 1)).toBe(0);
+    expect(points(0, 4)).toBe(0);
+  });
+});
 
-expectBestMatch(calculateBestMatch(candidates[0])).toEqual(candidates[0]);
-expectBestMatch(calculateBestMatch(candidates[1])).toEqual(candidates[1]);
-expectBestMatch(calculateBestMatch(candidates[2])).toEqual(candidates[2]);
-expectBestMatch(calculateBestMatch(candidates[3])).toEqual(candidates[3]);
-
-console.log('全て成功した。');
+describe('compatibility-caculator', () => {
+  it('is equal', () => {
+    expect(calculateBestMatch(candidates[0])).toEqual(candidates[0]);
+    expect(calculateBestMatch(candidates[1])).toEqual(candidates[1]);
+    expect(calculateBestMatch(candidates[2])).toEqual(candidates[2]);
+  });
+});
